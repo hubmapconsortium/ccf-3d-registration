@@ -1,2 +1,1 @@
-# ccf-ui-registration
-[Work in Progress] CCF 3d Registration Interface
+# 19-3D-Registration-Playground
