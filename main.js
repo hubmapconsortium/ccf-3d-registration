@@ -5,7 +5,8 @@ function init() {
 
 
     var lightLeft = getPointLight(1, 'rgb(255, 255, 255)');
-    var lightRight = getPointLight(1.25, 'rgb(255, 255, 255)');
+    var lightRight = getPointLight(1, 'rgb(255, 255, 255)');
+    var lightBottom = getPointLight(10, 'rgb(255, 255, 255)');
     var dirLight = getDirectionalLight(5);
 
 
@@ -17,26 +18,16 @@ function init() {
     lightRight.position.x = 50;
     lightRight.position.y = 14;
     lightRight.position.z = -6;
+    lightBottom.position = {
+        x: 0,
+        y: -5,
+        z: 0
+    }
+
+    gui.add(lightBottom.position, "y", 0, -10)
 
 
 
-
-    // dat.gui
-    gui.add(lightLeft, 'intensity', 0, 10);
-    gui.add(lightLeft.position, 'x', -50, 50);
-    gui.add(lightLeft.position, 'y', -50, 50);
-    gui.add(lightLeft.position, 'z', -50, 50);
-
-    gui.add(lightRight, 'intensity', 0, 10);
-    gui.add(lightRight.position, 'x', -50, 50);
-    gui.add(lightRight.position, 'y', -50, 50);
-    gui.add(lightRight.position, 'z', -50, 50);
-
-
-
-
-
-    gui.add(dirLight, 'intensity', 0, 10);
 
     // add other objects to the scene
     scene.add(lightLeft);
@@ -73,7 +64,7 @@ function init() {
     var material = new THREE.MeshBasicMaterial({
         color: 0xff0000,
         map: texture,
-        side: THREE.DoubleSide,
+        // side: THREE.DoubleSide,
         transparent: true
     });
     var mesh = new THREE.Mesh(
@@ -84,8 +75,8 @@ function init() {
     mesh.rotation.x = 90 * Math.PI / 180;
     mesh.position.x = -6;
     mesh.position.y = .5;
-    
-    gui.add(mesh.position, 'x', -7, 0);
+
+
 
     scene.add(mesh);
 
@@ -100,7 +91,7 @@ function init() {
 
             var colorMap = textureLoader.load('/assets/kidney/NLMVHM_Kidneys-DM.jpg');
             var bumpMap = textureLoader.load('/assets/kidney/NLMVHM_Kidneys-NM.jpg');
-            var faceMaterial = getMaterial('standard', 'rgb(255, 255, 255)');
+            var faceMaterial = getMaterial('lambert', 'rgb(255, 255, 255)');
 
 
             object.traverse(function (child) {
@@ -112,9 +103,12 @@ function init() {
                 faceMaterial.roughnessMap = bumpMap;
                 faceMaterial.metalness = 0;
                 faceMaterial.bumpScale = 0.175;
+                faceMaterial.transparent = true;
+                faceMaterial.opacity = .3;
 
             });
 
+            gui.add(faceMaterial, "opacity", 0, 1);
             kidney.add(object);
 
             object.position.z = 5;
@@ -130,7 +124,7 @@ function init() {
     kidney.position.x = 10;
 
 
-var cube = getBox(2,.5,2);
+    var cube = getBox(2, .5, 2);
 
     var sliver = new THREE.Group();
     sliver.add(cube);
@@ -139,20 +133,74 @@ var cube = getBox(2,.5,2);
     sliver.position.x = -6;
     scene.add(sliver);
 
-    console.log(cube.position);
-    console.log(mesh.position);
-
 
     // renderer
     const canvas = document.querySelector('#c');
-    
-        
-    var renderer = new THREE.WebGLRenderer({canvas: canvas});
+
+
+    var renderer = new THREE.WebGLRenderer({
+        canvas: canvas
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor('rgb(120, 120, 120)');
     renderer.shadowMap.enabled = true;
 
-    var controls = new THREE.OrbitControls(camera, renderer.domElement);
+    // var controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+    var options = {
+        rollEnabled: false,
+        movementEnabled: true,
+        lookEnabled: true,
+        rollEnabled: true,
+        invertPitch: false,
+        fovEnabled: false,
+        fovMin: 2,
+        fovMax: 115,
+        rotationSensitivity: 0.05,
+        movementEasing: 3,
+        movementAcceleration: 100,
+        fovSensitivity: 0.01,
+        fovEasing: 3,
+        fovAcceleration: 5,
+        invertScroll: false
+    }
+
+    var mouse = new THREE.Vector2();
+    document.addEventListener('mousedown', onDocumentMouseDown, false);
+    document.addEventListener('mousewheel', onDocumentMouseWheel, false);
+    var controls = new THREE.SpaceNavigatorControls(options);
+    document.addEventListener('mousewheel', onDocumentMouseWheel, false);
+    // document.addEventListener('mousedown', onDocumentMouseDown, function () {
+    //     console.log("clicked");
+    // });
+
+    function onDocumentMouseDown(event) {
+
+
+
+        // event.preventDefault();
+
+        // switch (event.which) {
+        //     case 1: // left mouse click
+
+        //         console.log("left");
+        //         break;
+
+        //     case 3: // right mouse click
+        //         console.log("right");
+        //         break;
+        // }
+    }
+
+    function onDocumentMouseWheel(event) {
+        var fovMAX = 160;
+        var fovMIN = 1;
+        console.log("wheel");
+        camera.fov -= event.wheelDeltaY * 0.05;
+        camera.fov = Math.max(Math.min(camera.fov, fovMAX), fovMIN);
+        camera.projectionMatrix = new THREE.Matrix4().makePerspective(camera.fov, window.innerWidth / window.innerHeight, camera.near, camera.far);
+
+    }
 
     document.getElementById('webgl').appendChild(renderer.domElement);
 
@@ -163,12 +211,24 @@ var cube = getBox(2,.5,2);
 
 function update(renderer, scene, camera, controls, clock) {
     controls.update();
+
+    // update camera position
+    camera.position.copy(controls.position);
+    // update camera rotation
+    camera.rotation.copy(controls.rotation);
+    // when using mousewheel to control camera FOV
+    camera.fov = controls.fov;
+    camera.updateProjectionMatrix();
+
+    // render();
     const xElem = document.querySelector('#x');
     const yElem = document.querySelector('#y');
     const zElem = document.querySelector('#z');
-    xElem.textContent = Math.round(camera.position.x * 100)/100;
-    yElem.textContent = Math.round(camera.position.y * 100)/100;
-    zElem.textContent = Math.round(camera.position.z * 100)/100;
+    // var IsSpace = document.querySelector('#spacemouse');
+    // console.log(IsSpace.);
+    xElem.textContent = Math.round(camera.position.x * 100) / 100;
+    yElem.textContent = Math.round(camera.position.y * 100) / 100;
+    zElem.textContent = Math.round(camera.position.z * 100) / 100;
     renderer.render(scene, camera);
     requestAnimationFrame(function () {
         update(renderer, scene, camera, controls, clock);

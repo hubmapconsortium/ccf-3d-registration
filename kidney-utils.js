@@ -37,6 +37,7 @@ function getMaterial(type, color) {
     var selectedMaterial;
     var materialOptions = {
         color: color === undefined ? 'rgb(255, 255, 255)' : color,
+        side: THREE.DoubleSide
     };
 
     switch (type) {

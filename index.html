@@ -11,17 +11,17 @@
 			overflow: hidden
 		}
 
-	
-    #debug {
-      position: absolute;
-      left: 1em;
-      top: 1em;
-      padding: 1em;
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      font-family: monospace;
-    }
-    </style>
+
+		#debug {
+			position: absolute;
+			left: 1em;
+			top: 1em;
+			padding: 1em;
+			background: rgba(0, 0, 0, 0.8);
+			color: white;
+			font-family: monospace;
+		}
+	</style>
 
 </head>
 
@@ -31,6 +31,7 @@
 		<div>x:<span id="x"></span></div>
 		<div>y:<span id="y"></span></div>
 		<div>z:<span id="z"></span></div>
+		<div><input type="checkbox" name="space-mouse" value="Car" id="spacemouse" unchecked>Using pace mouse?<br><span></span></div>
 	</div>
 	<div id="webgl"></div>
 	<script src='kidney-utils.js'></script>
@@ -40,6 +41,10 @@
 	<script src="/lib/three.js"></script>
 	<script src="/lib/OBJLoader.js"></script>
 	<script src="/lib/OrbitControls.js"></script>
+	<!-- Load Space Navigator code -->
+	<script
+		src="https://rawgit.com/archilogic-com/aframe-space-navigator-controls/master/dist/aframe-space-navigator-controls.js">
+	</script>
 	<script src="./main.js"></script>
 </body>
 
