@@ -41,9 +41,8 @@ function init() {
         1, // near clipping plane
         1000 // far clipping plane
     );
-    camera.position.z = 20;
-    camera.position.x = 0;
-    camera.position.y = 5;
+    camera.position.y = 10;
+    camera.position.z = 23;
 
     // load external geometry
     var loader = new THREE.OBJLoader();
@@ -83,7 +82,7 @@ function init() {
 
     var loader = new THREE.OBJLoader();
     loader.load(
-        'assets/kidney/NLMVHM_Kidneys.obj'
+        'assets/kidney/Repositioned Kidney Files/hubmap-2x butterfly subdivision-kidney-mh-repositioned.obj'
         // '/assets/models/head/lee-perry-smith-head-scan.obj'
         ,
 
@@ -91,7 +90,7 @@ function init() {
 
             var colorMap = textureLoader.load('/assets/kidney/NLMVHM_Kidneys-DM.jpg');
             var bumpMap = textureLoader.load('/assets/kidney/NLMVHM_Kidneys-NM.jpg');
-            var faceMaterial = getMaterial('lambert', 'rgb(255, 255, 255)');
+            var faceMaterial = getMaterial('phong', 'rgb(255, 255, 255)');
 
 
             object.traverse(function (child) {
@@ -111,8 +110,8 @@ function init() {
             gui.add(faceMaterial, "opacity", 0, 1);
             kidney.add(object);
 
-            object.position.z = 5;
-            object.position.y = -30;
+            // object.position.z = 5;
+            // object.position.y = -30;
 
 
         }
@@ -120,17 +119,16 @@ function init() {
 
     camera.lookAt(kidney.position);
 
-    kidney.rotation.x = 90;
-    kidney.position.x = 10;
+ 
 
 
     var cube = getBox(2, .5, 2);
 
     var sliver = new THREE.Group();
-    sliver.add(cube);
-    cube.position.x = -6;
-    sliver.add(mesh);
-    sliver.position.x = -6;
+    // sliver.add(cube);
+    // cube.position.x = -6;
+    // sliver.add(mesh);
+    // sliver.position.x = -6;
     scene.add(sliver);
 
 
@@ -164,43 +162,46 @@ function init() {
         fovAcceleration: 5,
         invertScroll: false
     }
+    
 
-    var mouse = new THREE.Vector2();
-    document.addEventListener('mousedown', onDocumentMouseDown, false);
-    document.addEventListener('mousewheel', onDocumentMouseWheel, false);
     var controls = new THREE.SpaceNavigatorControls(options);
-    document.addEventListener('mousewheel', onDocumentMouseWheel, false);
-    // document.addEventListener('mousedown', onDocumentMouseDown, function () {
-    //     console.log("clicked");
-    // });
 
-    function onDocumentMouseDown(event) {
+    // var mouse = new THREE.Vector2();
+    // document.addEventListener('mousedown', onDocumentMouseDown, false);
+    // document.addEventListener('mousewheel', onDocumentMouseWheel, false);
+
+    // document.addEventListener('mousewheel', onDocumentMouseWheel, false);
+    // // document.addEventListener('mousedown', onDocumentMouseDown, function () {
+    // //     console.log("clicked");
+    // // });
+
+    // function onDocumentMouseDown(event) {
 
 
 
-        // event.preventDefault();
+    //     // event.preventDefault();
 
-        // switch (event.which) {
-        //     case 1: // left mouse click
+    //     // switch (event.which) {
+    //     //     case 1: // left mouse click
 
-        //         console.log("left");
-        //         break;
+    //     //         console.log("left");
+    //     //         break;
 
-        //     case 3: // right mouse click
-        //         console.log("right");
-        //         break;
-        // }
-    }
+    //     //     case 3: // right mouse click
+    //     //         console.log("right");
+    //     //         break;
+    //     // }
+    // }
 
-    function onDocumentMouseWheel(event) {
-        var fovMAX = 160;
-        var fovMIN = 1;
-        console.log("wheel");
-        camera.fov -= event.wheelDeltaY * 0.05;
-        camera.fov = Math.max(Math.min(camera.fov, fovMAX), fovMIN);
-        camera.projectionMatrix = new THREE.Matrix4().makePerspective(camera.fov, window.innerWidth / window.innerHeight, camera.near, camera.far);
+    // function onDocumentMouseWheel(event) {
+    //     var fovMAX = 160;
+    //     var fovMIN = 1;
+    //     console.log("wheel");
+    //     camera.fov -= event.wheelDeltaY * 0.05;
+    //     camera.fov = Math.max(Math.min(camera.fov, fovMAX), fovMIN);
+    //     camera.projectionMatrix = new THREE.Matrix4().makePerspective(camera.fov, window.innerWidth / window.innerHeight, camera.near, camera.far);
 
-    }
+    // }
 
     document.getElementById('webgl').appendChild(renderer.domElement);
 
@@ -214,9 +215,9 @@ function update(renderer, scene, camera, controls, clock) {
 
     // update camera position
     camera.position.copy(controls.position);
-    // update camera rotation
+    // // update camera rotation
     camera.rotation.copy(controls.rotation);
-    // when using mousewheel to control camera FOV
+    // // when using mousewheel to control camera FOV
     camera.fov = controls.fov;
     camera.updateProjectionMatrix();
 
