@@ -54,35 +54,12 @@ function init() {
     // var plane = getPlane(20);
     // plane.material = texture;
 
-    var geometry = new THREE.PlaneGeometry(.2, .2);
 
-    var texture = textureLoader.load(
-        '/assets/textures/red-dot.png'
-    );
-
-    var material = new THREE.MeshBasicMaterial({
-        color: 0xff0000,
-        map: texture,
-        // side: THREE.DoubleSide,
-        transparent: true
-    });
-    var mesh = new THREE.Mesh(
-        geometry,
-        material
-    );
-    mesh.receiveShadow = true;
-    mesh.rotation.x = 90 * Math.PI / 180;
-    mesh.position.x = -6;
-    mesh.position.y = .5;
-
-
-
-    scene.add(mesh);
 
 
     var loader = new THREE.OBJLoader();
     loader.load(
-        'assets/kidney/Repositioned Kidney Files/hubmap-2x butterfly subdivision-kidney-mh-repositioned.obj'
+        'assets/kidney/Repositioned Kidney Files/single-kidney-repositioned.obj'
         // '/assets/models/head/lee-perry-smith-head-scan.obj'
         ,
 
@@ -109,7 +86,10 @@ function init() {
 
             gui.add(faceMaterial, "opacity", 0, 1);
             kidney.add(object);
-
+          
+          
+            var box = new THREE.BoxHelper( object, 0xffffff );
+            scene.add( box );
             // object.position.z = 5;
             // object.position.y = -30;
 
@@ -119,7 +99,39 @@ function init() {
 
     camera.lookAt(kidney.position);
 
- 
+    var dotPattern = new THREE.Group();
+    scene.add(dotPattern);
+
+    // var axesHelper = new THREE.AxesHelper( 5 );
+    // scene.add( axesHelper );
+
+    var sphereColors = [
+        //red
+        new THREE.Color("rgb(255, 0, 0)"),
+        //green
+        new THREE.Color("rgb(0, 255, 0)"),
+        //blue
+        new THREE.Color("rgb(0, 0, 255)")
+
+    ];
+
+    var numSpheres = 100;
+
+    for (let index = 0; index < numSpheres; index++) {
+        var color = sphereColors[Math.round(Math.random() * 2)];
+        var sphere = getSphere(.1, color)
+        var random =
+            sphere.position.x = Math.random() * (2 - (-2)) + (-2);
+        sphere.position.y = Math.random() * (2 - (-2)) + (-2);
+        sphere.position.z = Math.random() * (5 - (-5)) + (-5);
+        sphere.name = index;
+        // console.log(sphere.name);
+        dotPattern.add(sphere);
+    }
+    dotPattern.position.x = 0;
+    gui.add(dotPattern.position, "x", -10, 5)
+    //  var sphere = getSphere(1, sphereColors[2]);
+
 
 
     var cube = getBox(2, .5, 2);
@@ -162,7 +174,7 @@ function init() {
         fovAcceleration: 5,
         invertScroll: false
     }
-    
+
 
     var controls = new THREE.SpaceNavigatorControls(options);
 

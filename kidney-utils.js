@@ -1,4 +1,3 @@
-
 function getBox(w, h, d) {
     var geometry = new THREE.BoxGeometry(w, h, d);
     var material = new THREE.MeshPhongMaterial({
@@ -10,6 +9,28 @@ function getBox(w, h, d) {
     );
 
     return mesh;
+}
+
+function getSphere(size, color) {
+    var geometry = new THREE.SphereGeometry(size, 24, 24);
+
+    var material = new THREE.MeshPhongMaterial({
+        color: color
+    });
+    var mesh = new THREE.Mesh(
+        geometry,
+        material
+    );
+    var model = new THREE.Object3D();
+
+    var test = new THREE.BoxHelper(model, new THREE.Color("rgb(255,255,255)"));
+    model.add(test);
+    test.setFromObject(model);
+
+    model.add(mesh);
+    //    console.log(model.name)
+
+    return model;
 }
 
 
