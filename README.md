@@ -16,3 +16,6 @@ See the [ChangeLog](CHANGELOG.md) for the latest developments.
 ## Credits
 
 This code is developed at the [Cyberinfrastructure for Network Science Center at Indiana University](http://cns.iu.edu/). It is funded by NIH Award [OT2OD026671](https://projectreporter.nih.gov/project_info_description.cfm?aid=9687220").
+
+## Known Issues
+* On Windows 10, space mouse navigation only works in Chrome.
