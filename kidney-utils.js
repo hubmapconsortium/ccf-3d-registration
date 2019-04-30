@@ -33,6 +33,17 @@ function getSphere(size, color) {
     return model;
 }
 
+function getArrowHelper(origin, dir, length, color) {
+    var dir = dir;
+
+    //normalize the direction vector (convert to vector of length 1)
+    dir.normalize();
+
+
+    var arrowHelper = new THREE.ArrowHelper(dir, origin, length, color);
+    return arrowHelper;
+}
+
 
 function getPointLight(intensity) {
     var light = new THREE.PointLight(0xffffff, intensity);
@@ -54,11 +65,12 @@ function getDirectionalLight(intensity) {
 }
 
 
+
 function getMaterial(type, color) {
     var selectedMaterial;
     var materialOptions = {
         color: color === undefined ? 'rgb(255, 255, 255)' : color,
-        side: THREE.DoubleSide
+        // side: THREE.DoubleSide
     };
 
     switch (type) {

@@ -1,48 +1,14 @@
 function init() {
     var scene = new THREE.Scene();
-    var gui = new dat.GUI();
     var clock = new THREE.Clock();
-
-
-    var lightLeft = getPointLight(1, 'rgb(255, 255, 255)');
-    var lightRight = getPointLight(1, 'rgb(255, 255, 255)');
-    var lightBottom = getPointLight(10, 'rgb(255, 255, 255)');
-    var dirLight = getDirectionalLight(5);
-
-
-
-    lightLeft.position.x = 6;
-    lightLeft.position.y = 8;
-    lightLeft.position.z = 12;
-
-    lightRight.position.x = 50;
-    lightRight.position.y = 14;
-    lightRight.position.z = -6;
-    lightBottom.position = {
-        x: 0,
-        y: -5,
-        z: 0
-    }
-
-    gui.add(lightBottom.position, "y", 0, -10)
-
-
-
-
-    // add other objects to the scene
-    scene.add(lightLeft);
-    scene.add(lightRight);
-    // scene.add(dirLight);
-
-    // camera
     var camera = new THREE.PerspectiveCamera(
         50, // field of view
         window.innerWidth / window.innerHeight, // aspect ratio
-        1, // near clipping plane
+        .1, // near clipping plane
         1000 // far clipping plane
     );
     camera.position.y = 10;
-    camera.position.z = 23;
+    camera.position.z = 050;
 
     // load external geometry
     var loader = new THREE.OBJLoader();
@@ -55,11 +21,11 @@ function init() {
     // plane.material = texture;
 
 
-
+    scene.add( new THREE.AmbientLight( 0x222222 ) );
 
     var loader = new THREE.OBJLoader();
     loader.load(
-        'assets/kidney/Repositioned Kidney Files/single-kidney-repositioned.obj'
+        'assets/kidney/Repositioned Kidney Files/hubmap-2x butterfly subdivision-kidney-mh-single-ab-repositioned.obj'
         // '/assets/models/head/lee-perry-smith-head-scan.obj'
         ,
 
@@ -82,28 +48,55 @@ function init() {
                 faceMaterial.transparent = true;
                 faceMaterial.opacity = .3;
 
+                // console.log(child.isMesh);
+                if (child.isMesh) {
+                    var l = child.geometry.attributes.position.count;
+                    // console.log(l);
+
+                    var meshGeometry = new THREE.Geometry();
+
+
+
+                    var position = child.geometry.attributes.position;
+                    var vector = new THREE.Vector3();
+                    for (let i = 0; i < l; i++) {
+                        vector.fromBufferAttribute(position, i);
+                        vector.applyMatrix4(child.matrixWorld);
+                        // console.log(vector);
+                        // console.log(vector.x);
+                        meshGeometry.vertices.push(
+                            new THREE.Vector3(
+                                vector.x,
+                                vector.y,
+                                vector.z
+                            ));
+                        // console.log("cycle ended. next! " + i);
+                    }
+                   
+                   
+                    var sprite = new THREE.TextureLoader().load('assets/textures/disc.png');
+
+                    var meshMaterial = new THREE.PointsMaterial({
+                        size: 4,
+                        sizeAttenuation: false,
+                        map: sprite,
+                        alphaTest: 0.1,
+                        transparent: true,
+                        // color: sphereColors[Math.round(Math.random() * 2)]
+                    });
+                    var meshDot = new THREE.Points(meshGeometry, meshMaterial);
+                    scene.add(meshDot);
+                }
             });
 
-            gui.add(faceMaterial, "opacity", 0, 1);
-            kidney.add(object);
-          
-          
-            var box = new THREE.BoxHelper( object, 0xffffff );
-            scene.add( box );
-            // object.position.z = 5;
-            // object.position.y = -30;
-
-
+            // var box = new THREE.BoxHelper(object, 0xffffff);
+            // scene.add(box);
         }
     );
 
     camera.lookAt(kidney.position);
-
     var dotPattern = new THREE.Group();
     scene.add(dotPattern);
-
-    // var axesHelper = new THREE.AxesHelper( 5 );
-    // scene.add( axesHelper );
 
     var sphereColors = [
         //red
@@ -115,26 +108,94 @@ function init() {
 
     ];
 
-    var numSpheres = 100;
+    // var numSpheres = 800;
 
-    for (let index = 0; index < numSpheres; index++) {
-        var color = sphereColors[Math.round(Math.random() * 2)];
-        var sphere = getSphere(.1, color)
-        var random =
-            sphere.position.x = Math.random() * (2 - (-2)) + (-2);
-        sphere.position.y = Math.random() * (2 - (-2)) + (-2);
-        sphere.position.z = Math.random() * (5 - (-5)) + (-5);
-        sphere.name = index;
-        // console.log(sphere.name);
-        dotPattern.add(sphere);
-    }
-    dotPattern.position.x = 0;
-    gui.add(dotPattern.position, "x", -10, 5)
+    // for (let index = 0; index < numSpheres; index++) {
+    //     var color = sphereColors[Math.round(Math.random() * 2)];
+    //     var sphere = getSphere(.01, color)
+
+    //     sphere.position.x = Math.random() * (1 - (-1)) + (-1);
+    //     sphere.position.y = Math.random() * (1 - (-1)) + (-1);
+    //     sphere.position.z = Math.random() * (3 - (-3)) + (-3);
+    //     sphere.name = index;
+    //     // console.log(sphere.name);
+    //     dotPattern.add(sphere);
+    // }
+    // dotPattern.position.x = 0;
+    // gui.add(dotPattern.position, "x", -10, 5)
     //  var sphere = getSphere(1, sphereColors[2]);
 
+    // scene.fog = new THREE.FogExp2(0xffffff, .1);
+
+    var dotGeometry = new THREE.Geometry();
+    dotGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+    var dotMaterial = new THREE.PointsMaterial({
+        size: .1,
+        sizeAttenuation: false
+    });
+    var dot = new THREE.Points(dotGeometry, dotMaterial);
+    scene.add(dot);
+
+    // var pointGeometry = new THREE.Geometry();
+    // for (let index = 0; index < 1000; index++) {
+    //     var x = Math.random() * (1 - (-1)) + (-1);
+    //     var y = Math.random() * (1 - (-1)) + (-1);
+    //     var z = Math.random() * (3 - (-3)) + (-3);
+    //     pointGeometry.vertices.push(new THREE.Vector3(x, y, z));
+
+    // }
+
+    // var sprite = new THREE.TextureLoader().load('assets/textures/disc.png');
+
+    // var pointsMaterial = new THREE.PointsMaterial({
+    //     size: 10,
+    //     sizeAttenuation: false,
+    //     map: sprite,
+    //     alphaTest: 0.1,
+    //     transparent: true,
+    //     // vertexColors: THREE.VertexColors
+    // });
+
+    // var points = new THREE.Points(pointGeometry, pointsMaterial);
+    // scene.add(points);
 
 
-    var cube = getBox(2, .5, 2);
+
+
+
+
+    //normalize the direction vector (convert to vector of length 1)
+
+
+    // var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+
+
+    var arrowY = getArrowHelper(
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(0, 1, 0),
+        2,
+        '#00ff00');
+
+    var arrowX = getArrowHelper(
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(1, 0, 0),
+        2,
+        '#ff0000');
+
+    var arrowZ = getArrowHelper(
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(0, 0, 1),
+        2,
+        '#0000ff');
+
+    scene.add(arrowX, arrowY, arrowZ);
+
+    // var cube = getBox(2, .5, 2);
+
+
+
+
+
 
     var sliver = new THREE.Group();
     // sliver.add(cube);
@@ -152,13 +213,13 @@ function init() {
         canvas: canvas
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor('rgb(120, 120, 120)');
+    renderer.setClearColor('rgb(20,20,20)');
     renderer.shadowMap.enabled = true;
 
     // var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     var options = {
-        rollEnabled: false,
+        rollEnabled: true,
         movementEnabled: true,
         lookEnabled: true,
         rollEnabled: true,
@@ -230,7 +291,7 @@ function update(renderer, scene, camera, controls, clock) {
     // // update camera rotation
     camera.rotation.copy(controls.rotation);
     // // when using mousewheel to control camera FOV
-    camera.fov = controls.fov;
+    // camera.fov = controls.fov;
     camera.updateProjectionMatrix();
 
     // render();
