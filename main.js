@@ -31,8 +31,8 @@ function init() {
 
         function (object) {
 
-            var colorMap = textureLoader.load('/assets/kidney/NLMVHM_Kidneys-DM.jpg');
-            var bumpMap = textureLoader.load('/assets/kidney/NLMVHM_Kidneys-NM.jpg');
+            var colorMap = textureLoader.load('assets/kidney/NLMVHM_Kidneys-DM.jpg');
+            var bumpMap = textureLoader.load('assets/kidney/NLMVHM_Kidneys-NM.jpg');
             var faceMaterial = getMaterial('phong', 'rgb(255, 255, 255)');
 
 
