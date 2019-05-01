@@ -21,7 +21,7 @@ function init() {
     // plane.material = texture;
 
 
-    scene.add( new THREE.AmbientLight( 0x222222 ) );
+    scene.add(new THREE.AmbientLight(0x222222));
 
     var loader = new THREE.OBJLoader();
     loader.load(
@@ -72,8 +72,8 @@ function init() {
                             ));
                         // console.log("cycle ended. next! " + i);
                     }
-                   
-                   
+
+
                     var sprite = new THREE.TextureLoader().load('assets/textures/disc.png');
 
                     var meshMaterial = new THREE.PointsMaterial({

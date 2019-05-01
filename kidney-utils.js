@@ -11,6 +11,10 @@ function getBox(w, h, d) {
     return mesh;
 }
 
+function giveRandom(min, max){
+    return Math.random() * (max - min) + min;
+}
+
 function getSphere(size, color) {
     var geometry = new THREE.SphereGeometry(size, 24, 24);
 
