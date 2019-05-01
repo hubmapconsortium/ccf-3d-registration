@@ -239,6 +239,10 @@ function init() {
 
     var controls = new THREE.SpaceNavigatorControls(options);
 
+    if (!controls.getSpaceNavigator()) {
+        alert("Sorry, this demo only works with a Space Mouse.");
+    }
+
     // var mouse = new THREE.Vector2();
     // document.addEventListener('mousedown', onDocumentMouseDown, false);
     // document.addEventListener('mousewheel', onDocumentMouseWheel, false);
