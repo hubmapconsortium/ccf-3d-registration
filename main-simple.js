@@ -173,9 +173,9 @@ function init() {
         invertScroll: false
     }
 
-    // if (!controls.getSpaceNavigator()) {
-    //     alert("Sorry, this demo only works with a Space Mouse.");
-    // }
+    if (!controls.getSpaceNavigator()) {
+        alert("Sorry, this demo only works with a Space Mouse.");
+    }
 
     document.getElementById('webgl').appendChild(renderer.domElement);
     update(renderer, scene, camera, controls);
