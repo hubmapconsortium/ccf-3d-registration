@@ -118,12 +118,12 @@ function init() {
         var sphereBox3Helper = new THREE.BoxHelper(currentSphere);
 
         if (sliverBox3.containsBox(sphereBox3)) {
-            console.log("is in");
+            // console.log("is in");
             var copyBoxHelper = new THREE.BoxHelper(currentSphere, 0xff0000);
             // scene.add(copyBoxHelper);
             sliver.add(copy);
         } else {
-            console.log("is out");
+            // console.log("is out");
         }
     }
 
@@ -197,7 +197,7 @@ function init() {
     window.addEventListener('resize', onWindowResize, false);
 
     function onWindowResize() {
-        console.log('resiizng');
+        // console.log('resiizng');
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
 
