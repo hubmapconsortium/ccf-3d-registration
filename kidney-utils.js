@@ -19,7 +19,8 @@ function getSphere(size, color) {
     var geometry = new THREE.SphereGeometry(size, 24, 24);
 
     var material = new THREE.MeshPhongMaterial({
-        color: color
+        color: color,
+        shininess: 100
     });
     var mesh = new THREE.Mesh(
         geometry,
