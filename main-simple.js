@@ -146,10 +146,10 @@ function init() {
     var renderer = new THREE.WebGLRenderer({
         canvas: canvas
     });
-    // var controls = new THREE.OrbitControls(camera, renderer.domElement);
-    // controls.enablePan = false;
+    var controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enablePan = false;
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor('rgb(120,120,120)');
+    renderer.setClearColor('rgb(50,50,50)');
     renderer.shadowMap.enabled = true;
     document.getElementById('webgl').appendChild(renderer.domElement);
     renderer.render(
@@ -158,7 +158,7 @@ function init() {
     );
 
     //set up user input
-    var controls = new THREE.SpaceNavigatorControls(options);
+    // var controls = new THREE.SpaceNavigatorControls(options);
    
     var options = {
         rollEnabled: true,
@@ -190,9 +190,9 @@ function init() {
 function update(renderer, scene, camera, controls, clock) {
     controls.update();
     // update camera position
-    camera.position.copy(controls.position);
+    // camera.position.copy(controls.position);
     // // // update camera rotation
-    camera.rotation.copy(controls.rotation);
+    // camera.rotation.copy(controls.rotation);
     // // // when using mousewheel to control camera FOV
     // // camera.fov = controls.fov;
     camera.updateProjectionMatrix();
