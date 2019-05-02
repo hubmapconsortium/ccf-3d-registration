@@ -12,3 +12,12 @@ Changelog for the Common Coordinate Framework 3d Registration User Interface (CC
 
 * On Windows 10, space mouse navigation only works in Chrome.
 * Kidney OBJ files currently not available on GitHub pages. Error message: Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at ‘https://api.github.com/_private/browser/stats’. (Reason: Credential is not supported if the CORS header ‘Access-Control-Allow-Origin’ is ‘*’)
+
+## 0.0.2 - 2019-05-02
+
+### Added in 0.0.2
+
+* Pastel color palette
+* camera control via mouse
+* randomized placement of spheres
+* sliver is created dynamically
