@@ -2,7 +2,7 @@ function init() {
     // set up scene + camera
     var scene = new THREE.Scene();
     var clock = new THREE.Clock();
-
+    var phi = 1.618033988749895;
     var camera = new THREE.PerspectiveCamera(
         50, // field of view
         window.innerWidth / window.innerHeight, // aspect ratio
@@ -10,15 +10,15 @@ function init() {
         1000 // far clipping plane
     );
 
-    
+
     // var camera = new THREE.OrthographicCamera(  window.innerWidth / - 200, window.innerWidth / 200, window.innerHeight / 200, window.innerHeight / -200, - 500, 1000);
 
 
     // set up 3D content 
     // kidney
     var kidneyWidth = 4;
-    var kidneyHeight = 3;
-    var kidneyDepth = 10;
+    var kidneyHeight = 10;
+    var kidneyDepth = 3;
     var kidney = new THREE.Group();
     scene.add(kidney);
 
@@ -44,17 +44,17 @@ function init() {
 
     var sphereColors = [
         //red
-        new THREE.Color("rgb(255, 0, 0)"),
+        new THREE.Color(0x7e57c2),
         //green
-        new THREE.Color("rgb(0, 255, 0)"),
+        new THREE.Color(0xFFCC80),
         //blue
-        new THREE.Color("rgb(0, 0, 255)")
+        new THREE.Color(0xF06292)
 
     ];
 
     var spheresInside = new THREE.Group();
     var sphereArray = [];
-    var numSpheres = 100;
+    var numSpheres = 200;
     for (let index = 0; index < numSpheres; index++) {
         var newSphere = getSphere(sphereRadius, sphereColors[Math.round(Math.random() * 2)]);
         newSphere.position.x = giveRandom(-kidneyWidth / 2, kidneyWidth / 2);
@@ -70,12 +70,19 @@ function init() {
     scene.add(spheresInside);
 
     //sliver
-    var sliverOffset = -10; //determines distance between sliver and kidney
+    var sliverOffset = +5; //determines distance between sliver and kidney
     var sliver = new THREE.Group();
     scene.add(sliver);
-    var sliverWidth = giveRandom(2, kidneyWidth);
-    var sliverHeight = giveRandom(2, kidneyHeight);
-    var sliverDepth = giveRandom(2, kidneyDepth);
+    // var sliverWidth = giveRandom(2, kidneyWidth);
+    // var sliverHeight = giveRandom(2, kidneyHeight);
+    // var sliverDepth = giveRandom(2, kidneyDepth);
+
+
+
+    // implement golden ratio later
+    var sliverWidth = 3;
+    var sliverHeight = 2;
+    var sliverDepth = (1 / 3) * sliverHeight;
     var geometry = new THREE.BoxGeometry(sliverWidth, sliverHeight, sliverDepth);
     var material = new THREE.MeshPhongMaterial({
         color: 'rgb(120, 120, 120)',
@@ -113,7 +120,7 @@ function init() {
         if (sliverBox3.containsBox(sphereBox3)) {
             console.log("is in");
             var copyBoxHelper = new THREE.BoxHelper(currentSphere, 0xff0000);
-            scene.add(copyBoxHelper);
+            // scene.add(copyBoxHelper);
             sliver.add(copy);
         } else {
             console.log("is out");
@@ -124,21 +131,25 @@ function init() {
     sliver.position.x = sliver.position.x + sliverOffset;
 
     // set up lighting
-    var dirLight1 = getDirectionalLight(.7);
+    var dirLight1 = getDirectionalLight(.8);
     scene.add(dirLight1);
     dirLight1.position.x = 10;
     dirLight1.position.y = 5;
-    var dirLight2 = getDirectionalLight(.4);
+    var dirLight2 = getDirectionalLight(.8);
     scene.add(dirLight2);
     dirLight2.position.x = -10;
     dirLight2.position.y = 5;
-    var dirLight3 = getDirectionalLight(1);
+    var dirLight3 = getDirectionalLight(.7);
     scene.add(dirLight3);
     dirLight3.position.z = 5;
-    dirLight3.position.y = 5;
+    dirLight3.position.y = -5;
+    scene.add(dirLight3);
+    var dirLight4 = getDirectionalLight(.7);
+    dirLight4.position.z = -5;
+    scene.add(dirLight4);
 
-    camera.position.z = 10;
-   
+
+
 
 
     //set up canvas + renderer
@@ -149,7 +160,7 @@ function init() {
     var controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enablePan = false;
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor('rgb(50,50,50)');
+    renderer.setClearColor('rgb(20,20,20)');
     renderer.shadowMap.enabled = true;
     document.getElementById('webgl').appendChild(renderer.domElement);
     renderer.render(
@@ -157,9 +168,14 @@ function init() {
         camera
     );
 
+    // Place camera on x axis
+    camera.position.set(0, 0, 15);
+    camera.up = new THREE.Vector3(0, 1, 0);
+    // camera.lookAt(new THREE.Vector3(50,50,5000));
+
     //set up user input
     // var controls = new THREE.SpaceNavigatorControls(options);
-   
+
     var options = {
         rollEnabled: true,
         movementEnabled: true,
@@ -176,6 +192,17 @@ function init() {
         fovEasing: 3,
         fovAcceleration: 5,
         invertScroll: false
+    }
+
+    window.addEventListener('resize', onWindowResize, false);
+
+    function onWindowResize() {
+        console.log('resiizng');
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
     }
 
     // if (!controls.getSpaceNavigator()) {
@@ -208,5 +235,7 @@ function update(renderer, scene, camera, controls, clock) {
         update(renderer, scene, camera, controls, clock);
     });
 }
+
+
 
 init();
