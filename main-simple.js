@@ -113,7 +113,7 @@ function init() {
         if (sliverBox3.containsBox(sphereBox3)) {
             console.log("is in");
             var copyBoxHelper = new THREE.BoxHelper(currentSphere, 0xff0000);
-            // scene.add(copyBoxHelper);
+            scene.add(copyBoxHelper);
             sliver.add(copy);
         } else {
             console.log("is out");
@@ -137,6 +137,8 @@ function init() {
     dirLight3.position.z = 5;
     dirLight3.position.y = 5;
 
+    camera.position.z = 10;
+   
 
 
     //set up canvas + renderer
@@ -144,6 +146,8 @@ function init() {
     var renderer = new THREE.WebGLRenderer({
         canvas: canvas
     });
+    // var controls = new THREE.OrbitControls(camera, renderer.domElement);
+    // controls.enablePan = false;
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor('rgb(120,120,120)');
     renderer.shadowMap.enabled = true;
@@ -155,6 +159,7 @@ function init() {
 
     //set up user input
     var controls = new THREE.SpaceNavigatorControls(options);
+   
     var options = {
         rollEnabled: true,
         movementEnabled: true,
@@ -173,9 +178,9 @@ function init() {
         invertScroll: false
     }
 
-    if (!controls.getSpaceNavigator()) {
-        alert("Sorry, this demo only works with a Space Mouse.");
-    }
+    // if (!controls.getSpaceNavigator()) {
+    //     alert("Sorry, this demo only works with a Space Mouse.");
+    // }
 
     document.getElementById('webgl').appendChild(renderer.domElement);
     update(renderer, scene, camera, controls);
@@ -186,10 +191,10 @@ function update(renderer, scene, camera, controls, clock) {
     controls.update();
     // update camera position
     camera.position.copy(controls.position);
-    // // update camera rotation
+    // // // update camera rotation
     camera.rotation.copy(controls.rotation);
-    // // when using mousewheel to control camera FOV
-    // camera.fov = controls.fov;
+    // // // when using mousewheel to control camera FOV
+    // // camera.fov = controls.fov;
     camera.updateProjectionMatrix();
     // render();
     const xElem = document.querySelector('#x');
