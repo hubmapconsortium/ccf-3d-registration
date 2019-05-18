@@ -21,3 +21,7 @@ Changelog for the Common Coordinate Framework 3d Registration User Interface (CC
 * camera control via mouse
 * randomized placement of spheres
 * sliver is created dynamically
+
+### Known Issues in 0.0.2
+
+* TODO

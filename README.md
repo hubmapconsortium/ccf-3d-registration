@@ -8,7 +8,7 @@
 
 ## WORK-IN-PROGRESS
 
-three.js testing for the CCF 3d Registration UI
+three.js testing for the CCF 3d Registration UI. For information on how it this prototypewas is developed, see DEVELOPMENT.md
 
 ## Change Log
 
