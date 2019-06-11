@@ -1,3 +1,18 @@
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+
+function onMouseMove(event) {
+
+    // calculate mouse position in normalized device coordinates
+    // (-1 to +1) for both components
+
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+}
+
+
+
 function init() {
     // set up scene + camera
     var scene = new THREE.Scene();
@@ -11,7 +26,12 @@ function init() {
     );
 
 
+
     // var camera = new THREE.OrthographicCamera(  window.innerWidth / - 200, window.innerWidth / 200, window.innerHeight / 200, window.innerHeight / -200, - 500, 1000);
+
+    // adding user interaction with 3D object 
+
+
 
 
     // set up 3D content 
@@ -34,6 +54,7 @@ function init() {
     );
 
     kidney.add(mesh);
+
 
     //draw kidney BoxHelper
     var kidneyHelper = new THREE.BoxHelper(kidney);
@@ -230,10 +251,32 @@ function update(renderer, scene, camera, controls, clock) {
     xElem.textContent = Math.round(camera.position.x * 100) / 100;
     yElem.textContent = Math.round(camera.position.y * 100) / 100;
     zElem.textContent = Math.round(camera.position.z * 100) / 100;
+
+
+    // update the picking ray with the camera and mouse position
+    raycaster.setFromCamera(mouse, camera);
+
+    // calculate objects intersecting the picking ray
+    var intersects = raycaster.intersectObjects(scene.children, true);
+
+    for (var i = 0; i < intersects.length; i++) {
+
+        console.log(intersects[i].object);
+        console.log(intersects[0].type);
+        // intersects[i] = material.emissive.setHex( 0xff0000 );
+
+
+    }
+
+
+
+
     renderer.render(scene, camera);
     requestAnimationFrame(function () {
         update(renderer, scene, camera, controls, clock);
     });
+
+    window.addEventListener('mousemove', onMouseMove, false);
 }
 
 
