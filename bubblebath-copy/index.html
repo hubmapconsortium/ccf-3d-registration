@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="icon" type="image/png" href="https://cns.iu.edu/images/global/favicon.ico">
+	<title>Three.js</title>
+	<style type="text/css">
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+
+
+		#debug {
+			position: absolute;
+			left: 1em;
+			top: 1em;
+			padding: 1em;
+			background: rgba(0, 0, 0, 0.8);
+			color: white;
+			font-family: monospace;
+		}
+	</style>
+</head>
+
+<body>
+	<canvas id="c"></canvas>
+	<div id="debug">
+			<div>Camera position:<span></span></div>
+		<div>x:<span id="x"></span></div>
+		<div>y:<span id="y"></span></div>
+		<div>z:<span id="z"></span></div>
+
+	</div>
+	<div id="webgl"></div>
+	<script src="kidney-utils.js"></script>
+	<script src="lib/Tween.min.js"></script>
+	<script src="lib/perlin.js"></script>
+	<script src="lib/dat.gui.min.js"></script>
+	<script src="lib/three.js"></script>
+	<script src="lib/OBJLoader.js"></script>
+	<script src="lib/OrbitControls.js"></script>
+	<!-- Load Space Navigator code -->
+	<script
+		src="https://rawgit.com/archilogic-com/aframe-space-navigator-controls/master/dist/aframe-space-navigator-controls.js">
+	</script>
+	<!-- <script src="main.js"></script> -->
+	<script src="main-simple.js"></script>
+</body>
+
+</html>
