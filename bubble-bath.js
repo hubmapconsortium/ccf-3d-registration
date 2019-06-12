@@ -1,6 +1,8 @@
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 
+var addSpheres = false;
+
 function onMouseMove(event) {
 
     // calculate mouse position in normalized device coordinates
@@ -88,7 +90,10 @@ function init() {
     for (let index = 0; index < sphereArray.length; index++) {
         spheresInside.add(sphereArray[index]);
     }
-    scene.add(spheresInside);
+    if (addSpheres) {
+        scene.add(spheresInside);
+    }
+
 
     //sliver
     var sliverOffset = +5; //determines distance between sliver and kidney
@@ -142,7 +147,10 @@ function init() {
             // console.log("is in");
             var copyBoxHelper = new THREE.BoxHelper(currentSphere, 0xff0000);
             // scene.add(copyBoxHelper);
-            sliver.add(copy);
+            if (addSpheres) {
+                sliver.add(copy);
+            }
+
         } else {
             // console.log("is out");
         }
