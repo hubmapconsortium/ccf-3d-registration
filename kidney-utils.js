@@ -1,12 +1,15 @@
 function getBox(w, h, d) {
     var geometry = new THREE.BoxGeometry(w, h, d);
     var material = new THREE.MeshPhongMaterial({
-        color: 'rgb(120, 120, 120)'
+        color: 'rgb(120, 120, 120)',
+        shininess: 100
     });
+    material.depthWrite = false;
     var mesh = new THREE.Mesh(
         geometry,
         material
     );
+    mesh.doubleSided = true;
 
     return mesh;
 }

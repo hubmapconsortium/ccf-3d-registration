@@ -1,25 +1,15 @@
-var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2();
-
+var sliver = new THREE.Group();
+sliver.name = 'sliver';
+var kidney = new THREE.Group();
+var xSpeed = .1;
+var ySpeed = .1;
 var addSpheres = false;
-
-function onMouseMove(event) {
-
-    // calculate mouse position in normalized device coordinates
-    // (-1 to +1) for both components
-
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-}
+var scene = new THREE.Scene();
 
 
 
 function init() {
     // set up scene + camera
-    var scene = new THREE.Scene();
-    var clock = new THREE.Clock();
-    var phi = 1.618033988749895;
     var camera = new THREE.PerspectiveCamera(
         50, // field of view
         window.innerWidth / window.innerHeight, // aspect ratio
@@ -27,28 +17,19 @@ function init() {
         1000 // far clipping plane
     );
 
-
-
-    // var camera = new THREE.OrthographicCamera(  window.innerWidth / - 200, window.innerWidth / 200, window.innerHeight / 200, window.innerHeight / -200, - 500, 1000);
-
-    // adding user interaction with 3D object 
-
-
-
-
     // set up 3D content 
     // kidney
     var kidneyWidth = 4;
     var kidneyHeight = 10;
     var kidneyDepth = 3;
-    var kidney = new THREE.Group();
+    kidney.name = 'kidney';
     scene.add(kidney);
 
     var geometry = new THREE.BoxGeometry(kidneyWidth, kidneyHeight, kidneyDepth);
-    var material = new THREE.MeshPhongMaterial({
+    var material = new THREE.MeshBasicMaterial({
         color: 'rgb(120, 120, 120)',
         transparent: true,
-        opacity: .4
+        opacity: .3
     });
     var mesh = new THREE.Mesh(
         geometry,
@@ -58,8 +39,9 @@ function init() {
     kidney.add(mesh);
 
 
+
     //draw kidney BoxHelper
-    var kidneyHelper = new THREE.BoxHelper(kidney);
+
     // scene.add(kidneyHelper);
 
     //spheres inside kidney
@@ -96,8 +78,10 @@ function init() {
 
 
     //sliver
-    var sliverOffset = +5; //determines distance between sliver and kidney
-    var sliver = new THREE.Group();
+    var sliverOffsetX = giveRandom(3, 8); //determines distance between sliver and kidney
+    var sliverOffsetY = giveRandom(5, -5);
+    var sliverOffsetZ = giveRandom(-3, 3);
+
     scene.add(sliver);
     // var sliverWidth = giveRandom(2, kidneyWidth);
     // var sliverHeight = giveRandom(2, kidneyHeight);
@@ -111,20 +95,48 @@ function init() {
     var sliverDepth = (1 / 3) * sliverHeight;
     var geometry = new THREE.BoxGeometry(sliverWidth, sliverHeight, sliverDepth);
     var material = new THREE.MeshPhongMaterial({
-        color: 'rgb(120, 120, 120)',
+        color: 'rgb(255,255,0)',
         transparent: true,
         opacity: .4
     });
-    var mesh = new THREE.Mesh(
+    var sliverMesh = new THREE.Mesh(
         geometry,
         material
     );
-    sliver.add(mesh);
+    sliverMesh.name = 'sliverMesh';
+    sliver.add(sliverMesh);
+    var box3 = new THREE.BoxHelper(sliverMesh, 0xffff00);
+    scene.add(box3);
+    // box3.position.x = 10;
+    var sphere = new THREE.SphereGeometry();
+
+    var box = new THREE.BoxHelper(sliverMesh, 0xffff00);
+    box.name = 'sliverMesh'
+    sliver.add(box);
+
+    var material = new THREE.LineBasicMaterial({
+        color: 0xffffff
+    });
+    var geometry = new THREE.Geometry();
+    geometry.vertices.push(sliver.position);
+    geometry.vertices.push(kidney.position);
+
+
+    var line = new THREE.Line(geometry, material);
+    scene.add(line);
+    line.name = 'dirLine';
+
+
+    // var sphere = new THREE.SphereGeometry();
+    // var object = new THREE.Mesh(sphere, new THREE.MeshBasicMaterial(0xff0000));
+    // var box = new THREE.BoxHelper(object, 0xffff00);
+    // scene.add(box);
+    // scene.add(kidneyHelper);
 
     //determine which spheres are inside the sliver so they can be copied
     //first, we draw some basic geometry as helpers
-    var sliverHelper = new THREE.BoxHelper(sliver);
-    scene.add(sliverHelper);
+    // var sliverHelper = new THREE.BoxHelper(sliver);
+    // scene.add(sliverHelper);
     var sliverBox3 = new THREE.Box3();
     sliverBox3.setFromObject(sliver);
 
@@ -157,7 +169,12 @@ function init() {
     }
 
     //move sliver away from kidney 
-    sliver.position.x = sliver.position.x + sliverOffset;
+    sliver.position.x = sliver.position.x + sliverOffsetX;
+    sliver.position.y = sliver.position.y + sliverOffsetY;
+    sliver.position.z = sliver.position.z + sliverOffsetZ;
+
+
+    console.log(sliver.position.distanceTo(kidney.position))
 
     // set up lighting
     var dirLight1 = getDirectionalLight(.8);
@@ -196,6 +213,7 @@ function init() {
         scene,
         camera
     );
+
 
     // Place camera on x axis
     camera.position.set(0, 0, 15);
@@ -251,42 +269,54 @@ function update(renderer, scene, camera, controls, clock) {
     // camera.rotation.copy(controls.rotation);
     // // // when using mousewheel to control camera FOV
     // // camera.fov = controls.fov;
+
     camera.updateProjectionMatrix();
     // render();
     const xElem = document.querySelector('#x');
     const yElem = document.querySelector('#y');
     const zElem = document.querySelector('#z');
+    const distanceToTarget = document.querySelector('#distance');
     xElem.textContent = Math.round(camera.position.x * 100) / 100;
     yElem.textContent = Math.round(camera.position.y * 100) / 100;
     zElem.textContent = Math.round(camera.position.z * 100) / 100;
+    distanceToTarget.textContent = Math.round(sliver.position.distanceTo(kidney.position) * 100) / 100;
 
 
     // update the picking ray with the camera and mouse position
-    raycaster.setFromCamera(mouse, camera);
+    // raycaster.setFromCamera(mouse, camera);
 
     // calculate objects intersecting the picking ray
-    var intersects = raycaster.intersectObjects(scene.children, true);
-
-    for (var i = 0; i < intersects.length; i++) {
-
-        console.log(intersects[i].object);
-        console.log(intersects[0].type);
-        // intersects[i] = material.emissive.setHex( 0xff0000 );
-
-
-    }
-
-
-
-
+  
     renderer.render(scene, camera);
     requestAnimationFrame(function () {
         update(renderer, scene, camera, controls, clock);
     });
 
-    window.addEventListener('mousemove', onMouseMove, false);
+
 }
 
+document.addEventListener("keydown", onDocumentKeyDown, false);
 
+function onDocumentKeyDown(event) {
+
+    var keyCode = event.which;
+    console.log(keyCode)
+    if (keyCode == 87) {
+        // console.log('w pressed');
+        sliver.position.y += ySpeed;
+    } else if (keyCode == 83) {
+        sliver.position.y -= ySpeed;
+    } else if (keyCode == 65) {
+        sliver.position.x -= xSpeed;
+    } else if (keyCode == 68) {
+        sliver.position.x += xSpeed;
+    } else if (keyCode == 32) {
+        sliver.position.set(0, 0, 0);
+    } else if (keyCode == 81) {
+        sliver.position.z += xSpeed;
+    } else if (keyCode == 69) {
+        sliver.position.z -= xSpeed;
+    }
+};
 
 init();
