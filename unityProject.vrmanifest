@@ -1,0 +1,16 @@
+{
+  "source": "Unity",
+  "applications": [
+    {
+      "app_key": "application.generated.unity.registrationuivirtualreality.exe",
+      "launch_type": "url",
+      "url": "steam://launch/",
+      "action_manifest_path": "D:\\BoxSyncAlex\\Box Sync\\18-HuBMAP-w\\Workspace\\threeJS-w\\Registration-UI-Virtual-Reality\\actions.json",
+      "strings": {
+        "en_us": {
+          "name": "Registration-UI-Virtual-Reality [Testing]"
+        }
+      }
+    }
+  ]
+}
