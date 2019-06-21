@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Valve.VR;
 
 
@@ -27,8 +25,11 @@ public class LaserP : MonoBehaviour
     public Vector3 teleportReticleOffset;
     // 7
     public LayerMask teleportMask;
+    public LayerMask inspectMask;
     // 8
     private bool shouldTeleport;
+
+    public GameObject testObject;
 
 
 
@@ -42,6 +43,11 @@ public class LaserP : MonoBehaviour
 
         // 1
         reticle = Instantiate(teleportReticlePrefab);
+        reticle.transform.eulerAngles = new Vector3(
+        0f,
+        this.transform.eulerAngles.z,
+        0f
+        );
         // 2
         teleportReticleTransform = reticle.transform;
 
@@ -51,11 +57,14 @@ public class LaserP : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        RotateEqually(ref reticle);
+        Debug.Log("Controller (right) z rotation: " + this.transform.eulerAngles.z);
+        Debug.Log("reticle y rotation: " + reticle.transform.eulerAngles.y);
+        Debug.Log("camera rig y rotation : " + cameraRigTransform.eulerAngles.y);
         // 1
         if (teleportAction.GetState(handType))
         {
             RaycastHit hit;
-
             // 2
             if (Physics.Raycast(controllerPose.transform.position, transform.forward, out hit, 100, teleportMask))
 
@@ -70,18 +79,34 @@ public class LaserP : MonoBehaviour
                 shouldTeleport = true;
 
             }
+            if (Physics.Raycast(controllerPose.transform.position, transform.forward, out hit, 10, inspectMask))
+
+            {
+                hitPoint = hit.point;
+                //ShowLaser(hit);
+                // 1
+                reticle.SetActive(false);
+                // 2
+                teleportReticleTransform.position = hitPoint + teleportReticleOffset;
+                // 3
+                shouldTeleport = false;
+
+            }
+
         }
         else // 3
         {
             laser.SetActive(false);
             reticle.SetActive(false);
-
         }
+
 
         if (teleportAction.GetStateUp(handType) && shouldTeleport)
         {
             Teleport();
         }
+
+       
 
 
     }
@@ -111,6 +136,20 @@ public class LaserP : MonoBehaviour
         difference.y = 0;
         // 5
         cameraRigTransform.position = hitPoint + difference;
+        //cameraRigTransform.eulerAngles = new Vector3(
+        //   0f,
+        //    reticle.transform.eulerAngles.z,
+        //  0f
+        //    );
+    }
+
+    private void RotateEqually(ref GameObject reticle)
+    {
+        reticle.transform.eulerAngles = new Vector3(
+        90f,
+        this.transform.eulerAngles.y,
+        this.transform.eulerAngles.z
+        );
     }
 
 
