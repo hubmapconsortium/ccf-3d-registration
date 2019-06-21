@@ -42,7 +42,7 @@ public class ControllerGrabObject : MonoBehaviour
             {
                 ReleaseObject();
             }
-            print("Released");
+            //print("Released");
         }
 
     }
