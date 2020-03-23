@@ -1,9 +1,9 @@
 window.hideSignupScreen = true;
 
 
-// window.ruiRegistrationCallback = function (str) {
-//     alert("I got json!" + "/n" + str);
-// }
+window.ruiRegistrationCallback = function (str) {
+    alert("I got json!" + "\n" + str);
+}
 
 /* <script src="FunctionTesting.js"></script> */
 
